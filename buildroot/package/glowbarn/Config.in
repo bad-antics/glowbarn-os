@@ -1,0 +1,58 @@
+config BR2_PACKAGE_GLOWBARN
+	bool "glowbarn"
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	depends on BR2_PACKAGE_HOST_RUSTC
+	select BR2_PACKAGE_EUDEV
+	select BR2_PACKAGE_MESA3D if BR2_PACKAGE_HAS_LIBGL
+	help
+	  GlowBarn - High-Performance Paranormal Detection Suite
+
+	  A cross-platform native application for paranormal investigation,
+	  environmental monitoring, and multi-modal anomaly detection.
+
+	  Features:
+	  - 50+ sensor types
+	  - Real-time multi-sensor fusion
+	  - GPU-accelerated entropy analysis
+	  - Military-grade encryption
+	  - Native visual console
+
+	  https://github.com/bad-antics/glowbarn-rs
+
+if BR2_PACKAGE_GLOWBARN
+
+config BR2_PACKAGE_GLOWBARN_GUI
+	bool "Enable GUI support"
+	default y
+	select BR2_PACKAGE_LIBDRM
+	select BR2_PACKAGE_WAYLAND if BR2_PACKAGE_HAS_LIBGL
+	help
+	  Enable the visual console GUI interface.
+
+config BR2_PACKAGE_GLOWBARN_GPU
+	bool "Enable GPU compute"
+	default y
+	depends on BR2_PACKAGE_HAS_LIBGL
+	select BR2_PACKAGE_VULKAN_HEADERS
+	select BR2_PACKAGE_VULKAN_LOADER
+	help
+	  Enable GPU-accelerated compute for entropy analysis
+	  and signal processing using wgpu/Vulkan.
+
+config BR2_PACKAGE_GLOWBARN_AUDIO
+	bool "Enable audio sensors"
+	default y
+	select BR2_PACKAGE_ALSA_LIB
+	select BR2_PACKAGE_PIPEWIRE
+	help
+	  Enable audio capture for EVP detection and
+	  ultrasonic/infrasonic analysis.
+
+config BR2_PACKAGE_GLOWBARN_SERIAL
+	bool "Enable serial sensors"
+	default y
+	help
+	  Enable support for serial/USB sensors
+	  (EMF meters, Geiger counters, etc.)
+
+endif

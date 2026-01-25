@@ -1,0 +1,37 @@
+config BR2_PACKAGE_GLOWBARN_SENSORS
+	bool "glowbarn-sensors"
+	depends on BR2_PACKAGE_GLOWBARN
+	help
+	  GlowBarn sensor drivers and hardware support packages.
+
+if BR2_PACKAGE_GLOWBARN_SENSORS
+
+config BR2_PACKAGE_GLOWBARN_SENSORS_I2C
+	bool "I2C sensor support"
+	default y
+	select BR2_PACKAGE_I2C_TOOLS
+	help
+	  Enable I2C sensors (BME280, MLX90614, etc.)
+
+config BR2_PACKAGE_GLOWBARN_SENSORS_GPIO
+	bool "GPIO sensor support"
+	default y
+	select BR2_PACKAGE_LIBGPIOD
+	help
+	  Enable GPIO-based sensors
+
+config BR2_PACKAGE_GLOWBARN_SENSORS_SDR
+	bool "Software Defined Radio support"
+	default n
+	select BR2_PACKAGE_RTL_SDR
+	select BR2_PACKAGE_LIBUSB
+	help
+	  Enable RTL-SDR support for RF monitoring
+
+config BR2_PACKAGE_GLOWBARN_SENSORS_THERMAL
+	bool "Thermal camera support"
+	default n
+	help
+	  Enable thermal camera support (FLIR Lepton, etc.)
+
+endif

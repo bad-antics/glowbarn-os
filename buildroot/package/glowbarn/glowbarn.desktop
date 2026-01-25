@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=GlowBarn
+Comment=Paranormal Detection Suite
+GenericName=Anomaly Detection
+Exec=/usr/bin/glowbarn
+Icon=glowbarn
+Terminal=false
+Type=Application
+Categories=Science;Utility;
+Keywords=paranormal;detection;sensors;emf;thermal;
+StartupWMClass=glowbarn

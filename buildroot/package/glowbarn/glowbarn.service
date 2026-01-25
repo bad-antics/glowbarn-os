@@ -1,0 +1,26 @@
+[Unit]
+Description=GlowBarn Paranormal Detection Suite
+Documentation=https://github.com/bad-antics/glowbarn-rs
+After=network.target local-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/glowbarn --headless
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+ReadWritePaths=/var/lib/glowbarn /var/log/glowbarn
+
+# Resource limits
+MemoryMax=2G
+CPUQuota=80%
+
+[Install]
+WantedBy=multi-user.target

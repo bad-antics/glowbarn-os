@@ -1,0 +1,29 @@
+# GlowBarn Sensor udev rules
+# Provides appropriate permissions for sensor hardware
+
+# RTL-SDR devices
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="2832", MODE="0666", GROUP="plugdev", SYMLINK+="rtlsdr%n"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="2838", MODE="0666", GROUP="plugdev", SYMLINK+="rtlsdr%n"
+
+# USB Serial devices (EMF meters, Geiger counters)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", MODE="0666", GROUP="dialout", SYMLINK+="glowbarn_serial%n"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", MODE="0666", GROUP="dialout", SYMLINK+="glowbarn_serial%n"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", MODE="0666", GROUP="dialout", SYMLINK+="glowbarn_serial%n"
+
+# FLIR Lepton thermal cameras
+SUBSYSTEM=="usb", ATTRS{idVendor}=="1e4e", ATTRS{idProduct}=="0100", MODE="0666", GROUP="video", SYMLINK+="flir_lepton%n"
+
+# I2C access for sensors
+SUBSYSTEM=="i2c-dev", MODE="0666", GROUP="i2c"
+
+# GPIO access
+SUBSYSTEM=="gpio", MODE="0666", GROUP="gpio"
+
+# SPI access
+SUBSYSTEM=="spidev", MODE="0666", GROUP="spi"
+
+# Generic USB HID sensors
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="*", MODE="0666", GROUP="plugdev"
+
+# Tag all GlowBarn devices
+SUBSYSTEM=="usb", TAG+="glowbarn-sensor"

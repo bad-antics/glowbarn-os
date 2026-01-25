@@ -1,0 +1,2 @@
+source "$BR2_EXTERNAL_GLOWBARN_EXTERNAL_PATH/package/glowbarn/Config.in"
+source "$BR2_EXTERNAL_GLOWBARN_EXTERNAL_PATH/package/glowbarn-sensors/Config.in"
