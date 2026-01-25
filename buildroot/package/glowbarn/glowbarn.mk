@@ -1,65 +1,46 @@
 ################################################################################
 #
-# glowbarn
+# glowbarn - Paranormal Research Operating System Core Application
 #
 ################################################################################
 
-GLOWBARN_VERSION = 2.0.0
-GLOWBARN_SITE = $(call github,bad-antics,glowbarn-rs,v$(GLOWBARN_VERSION))
+GLOWBARN_VERSION = 1.0.0
+GLOWBARN_SITE = $(BR2_EXTERNAL_GLOWBARN_PATH)/overlay/opt/glowbarn
+GLOWBARN_SITE_METHOD = local
 GLOWBARN_LICENSE = GPL-3.0
 GLOWBARN_LICENSE_FILES = LICENSE
 
-GLOWBARN_DEPENDENCIES = host-rustc eudev
+# Python-based application
+GLOWBARN_DEPENDENCIES = python3 python-flask python-pyyaml python-flask-cors
 
-GLOWBARN_CARGO_ENV = \
-	CARGO_HOME=$(HOST_DIR)/share/cargo
-
-GLOWBARN_CARGO_OPTS = \
-	--release \
-	--target=$(RUSTC_TARGET_NAME)
-
-# Build features based on config
-GLOWBARN_FEATURES =
-
-ifeq ($(BR2_PACKAGE_GLOWBARN_GUI),y)
-GLOWBARN_FEATURES += gui
-GLOWBARN_DEPENDENCIES += libdrm
-ifeq ($(BR2_PACKAGE_HAS_LIBGL),y)
-GLOWBARN_DEPENDENCIES += mesa3d
-endif
-endif
-
-ifeq ($(BR2_PACKAGE_GLOWBARN_GPU),y)
-GLOWBARN_FEATURES += gpu
-GLOWBARN_DEPENDENCIES += vulkan-headers vulkan-loader
-endif
-
-ifeq ($(BR2_PACKAGE_GLOWBARN_AUDIO),y)
-GLOWBARN_FEATURES += audio
-GLOWBARN_DEPENDENCIES += alsa-lib pipewire
-endif
-
-ifeq ($(BR2_PACKAGE_GLOWBARN_SERIAL),y)
-GLOWBARN_FEATURES += serial
-endif
-
-ifneq ($(GLOWBARN_FEATURES),)
-GLOWBARN_CARGO_OPTS += --features "$(GLOWBARN_FEATURES)"
-endif
-
+# No build needed - Python scripts
 define GLOWBARN_BUILD_CMDS
-	cd $(@D) && \
-	$(GLOWBARN_CARGO_ENV) \
-	cargo build $(GLOWBARN_CARGO_OPTS)
+	@echo "GlowBarn: Python package - no build required"
 endef
 
 define GLOWBARN_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 755 $(@D)/target/$(RUSTC_TARGET_NAME)/release/glowbarn \
-		$(TARGET_DIR)/usr/bin/glowbarn
+	# Install main application
+	$(INSTALL) -D -m 755 $(@D)/glowbarn.py \
+		$(TARGET_DIR)/opt/glowbarn/glowbarn.py
+	$(INSTALL) -D -m 755 $(@D)/glowbarn-cli.py \
+		$(TARGET_DIR)/opt/glowbarn/glowbarn-cli.py
+	
+	# Create symlinks for easy access
+	ln -sf /opt/glowbarn/glowbarn.py $(TARGET_DIR)/usr/bin/glowbarn
+	ln -sf /opt/glowbarn/glowbarn-cli.py $(TARGET_DIR)/usr/bin/glowbarn-cli
+	
+	# Install systemd service
 	$(INSTALL) -D -m 644 $(GLOWBARN_PKGDIR)/glowbarn.service \
 		$(TARGET_DIR)/usr/lib/systemd/system/glowbarn.service
+	
+	# Install desktop file
 	$(INSTALL) -D -m 644 $(GLOWBARN_PKGDIR)/glowbarn.desktop \
 		$(TARGET_DIR)/usr/share/applications/glowbarn.desktop
+	
+	# Create required directories
+	mkdir -p $(TARGET_DIR)/opt/glowbarn/{data,logs,recordings,captures,lib}
+	mkdir -p $(TARGET_DIR)/etc/glowbarn
+	mkdir -p $(TARGET_DIR)/var/lib/glowbarn
 endef
 
 define GLOWBARN_INSTALL_INIT_SYSTEMD

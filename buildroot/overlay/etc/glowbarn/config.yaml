@@ -1,0 +1,109 @@
+# GlowBarn OS Configuration
+version: "1.0"
+
+system:
+  hostname: glowbarn
+  timezone: America/New_York
+  
+web:
+  enabled: true
+  port: 8765
+  host: "0.0.0.0"
+  ssl: false
+  
+sensors:
+  emf:
+    enabled: true
+    pin: 17
+    sample_rate: 100
+    unit: "mG"
+    alert_threshold: 5.0
+  temperature:
+    enabled: true
+    type: ds18b20
+    pin: 4
+    unit: "fahrenheit"
+  humidity:
+    enabled: true
+    type: dht22
+    pin: 22
+  motion:
+    enabled: true
+    pin: 27
+    debounce_ms: 100
+  vibration:
+    enabled: true
+    pin: 23
+    sensitivity: 0.5
+  pressure:
+    enabled: true
+    type: bmp280
+    i2c_address: 0x76
+    
+audio:
+  evp_detection:
+    enabled: true
+    sample_rate: 44100
+    channels: 2
+    device: "default"
+    noise_floor: -50
+    detection_threshold: -40
+    min_duration_ms: 100
+    max_duration_ms: 3000
+    
+camera:
+  enabled: true
+  device: /dev/video0
+  resolution: "1280x720"
+  framerate: 30
+  night_vision: true
+  ir_cut_filter: auto
+  motion_detection:
+    enabled: true
+    sensitivity: 0.3
+    min_area: 500
+    
+logging:
+  level: INFO
+  file: /opt/glowbarn/logs/glowbarn.log
+  max_size: 10M
+  backup_count: 5
+  
+data:
+  storage_path: /opt/glowbarn/data
+  recordings_path: /opt/glowbarn/recordings
+  captures_path: /opt/glowbarn/captures
+  auto_export: false
+  export_format: csv
+  retention_days: 30
+  
+alerts:
+  enabled: true
+  email:
+    enabled: false
+    smtp_server: ""
+    smtp_port: 587
+    username: ""
+    password: ""
+    recipients: []
+  sound:
+    enabled: true
+    volume: 80
+    file: /usr/share/glowbarn/sounds/alert.wav
+  visual:
+    enabled: true
+    led_pin: 18
+  thresholds:
+    emf_high: 5.0
+    emf_very_high: 10.0
+    temp_change: 5.0
+    temp_cold_spot: 10.0
+    humidity_change: 15.0
+    motion_duration: 5
+    
+investigation:
+  session_auto_record: true
+  gps_enabled: false
+  location_name: ""
+  investigator_name: ""
+  notes_enabled: true

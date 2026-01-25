@@ -1,13 +1,15 @@
 [Unit]
-Description=GlowBarn Paranormal Research Operating System
+Description=GlowBarn Sensors Service
 Documentation=https://github.com/bad-antics/glowbarn-os
 After=network.target local-fs.target
+Requires=glowbarn.service
+After=glowbarn.service
 
 [Service]
 Type=simple
 User=root
 Group=root
-ExecStart=/usr/bin/python3 /opt/glowbarn/glowbarn.py
+ExecStart=/usr/bin/python3 -m glowbarn.sensors
 WorkingDirectory=/opt/glowbarn
 Restart=on-failure
 RestartSec=5
@@ -15,17 +17,8 @@ StandardOutput=journal
 StandardError=journal
 
 # Environment
-Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONPATH=/opt/glowbarn/lib
 Environment=GLOWBARN_CONFIG=/etc/glowbarn/config.yaml
-
-# Security hardening (relaxed for GPIO access)
-NoNewPrivileges=false
-ProtectSystem=false
-PrivateTmp=true
-ReadWritePaths=/opt/glowbarn /var/lib/glowbarn /etc/glowbarn
-
-# Resource limits
-MemoryMax=512M
 
 [Install]
 WantedBy=multi-user.target

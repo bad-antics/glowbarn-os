@@ -1,56 +1,68 @@
 config BR2_PACKAGE_GLOWBARN
 	bool "glowbarn"
-	depends on BR2_TOOLCHAIN_HAS_THREADS
-	depends on BR2_PACKAGE_HOST_RUSTC
-	select BR2_PACKAGE_EUDEV
-	select BR2_PACKAGE_MESA3D if BR2_PACKAGE_HAS_LIBGL
+	depends on BR2_PACKAGE_PYTHON3
+	select BR2_PACKAGE_PYTHON_FLASK
+	select BR2_PACKAGE_PYTHON_PYYAML
+	select BR2_PACKAGE_PYTHON_FLASK_CORS
 	help
-	  GlowBarn - High-Performance Paranormal Detection Suite
+	  GlowBarn - Paranormal Research Operating System Core
 
-	  A cross-platform native application for paranormal investigation,
-	  environmental monitoring, and multi-modal anomaly detection.
+	  A comprehensive paranormal investigation platform with:
+	  - Real-time sensor monitoring (EMF, temperature, humidity, etc.)
+	  - EVP (Electronic Voice Phenomena) detection
+	  - Night vision camera with motion detection
+	  - Web-based dashboard interface
+	  - Data logging and export
 
-	  Features:
-	  - 50+ sensor types
-	  - Real-time multi-sensor fusion
-	  - GPU-accelerated entropy analysis
-	  - Military-grade encryption
-	  - Native visual console
-
-	  https://github.com/bad-antics/glowbarn-rs
+	  https://github.com/bad-antics/glowbarn-os
 
 if BR2_PACKAGE_GLOWBARN
 
-config BR2_PACKAGE_GLOWBARN_GUI
-	bool "Enable GUI support"
+config BR2_PACKAGE_GLOWBARN_WEB
+	bool "Enable web dashboard"
 	default y
-	select BR2_PACKAGE_LIBDRM
-	select BR2_PACKAGE_WAYLAND if BR2_PACKAGE_HAS_LIBGL
 	help
-	  Enable the visual console GUI interface.
-
-config BR2_PACKAGE_GLOWBARN_GPU
-	bool "Enable GPU compute"
-	default y
-	depends on BR2_PACKAGE_HAS_LIBGL
-	select BR2_PACKAGE_VULKAN_HEADERS
-	select BR2_PACKAGE_VULKAN_LOADER
-	help
-	  Enable GPU-accelerated compute for entropy analysis
-	  and signal processing using wgpu/Vulkan.
+	  Enable the web-based control dashboard
+	  accessible at http://device-ip:8765
 
 config BR2_PACKAGE_GLOWBARN_AUDIO
-	bool "Enable audio sensors"
+	bool "Enable audio/EVP detection"
 	default y
 	select BR2_PACKAGE_ALSA_LIB
-	select BR2_PACKAGE_PIPEWIRE
+	select BR2_PACKAGE_PORTAUDIO
 	help
 	  Enable audio capture for EVP detection and
 	  ultrasonic/infrasonic analysis.
 
+config BR2_PACKAGE_GLOWBARN_CAMERA
+	bool "Enable camera support"
+	default y
+	select BR2_PACKAGE_LIBCAMERA
+	select BR2_PACKAGE_V4L_UTILS
+	help
+	  Enable camera support for visual investigation
+	  and motion detection.
+
+config BR2_PACKAGE_GLOWBARN_GPIO
+	bool "Enable GPIO sensors"
+	default y
+	select BR2_PACKAGE_LIBGPIOD
+	help
+	  Enable GPIO-based sensors
+	  (motion, temperature, humidity, etc.)
+
+config BR2_PACKAGE_GLOWBARN_I2C
+	bool "Enable I2C sensors"
+	default y
+	select BR2_PACKAGE_I2C_TOOLS
+	help
+	  Enable I2C-based sensors
+	  (pressure, accelerometer, etc.)
+
 config BR2_PACKAGE_GLOWBARN_SERIAL
 	bool "Enable serial sensors"
 	default y
+	select BR2_PACKAGE_LIBSERIALPORT
 	help
 	  Enable support for serial/USB sensors
 	  (EMF meters, Geiger counters, etc.)
