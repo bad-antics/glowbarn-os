@@ -187,3 +187,51 @@ GNU General Public License v3.0 (GPLv3)
 **Status:** 🟡 Planning Phase - Focus on completing glowbarn-rs first
 
 **Last Updated:** 2026-01-24
+
+---
+
+## Quick Start
+
+### Prerequisites
+- Linux build system (Ubuntu 22.04+ recommended)
+- 20GB+ free disk space
+- 4GB+ RAM
+
+### Build Steps
+
+```bash
+# Install dependencies
+make deps
+
+# Setup Buildroot
+make setup
+
+# Build for Raspberry Pi 4
+make build-rpi4
+
+# Or build for x86_64 PC
+make build-x86
+```
+
+### Write to SD Card
+
+```bash
+sudo dd if=buildroot-2024.02.9/output/images/glowbarn-os-rpi4.img of=/dev/sdX bs=4M status=progress
+```
+
+### Default Login
+- **Username:** root
+- **Password:** paranormal
+
+### Access Web Dashboard
+Open browser to: `http://<device-ip>:8765`
+
+---
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+GNU General Public License v3.0 - see [LICENSE](LICENSE) for details.
