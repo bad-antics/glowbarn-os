@@ -1,0 +1,66 @@
+# GlowBarn OS Main Configuration
+# Paranormal Research Operating System
+
+[general]
+name = "GlowBarn Research Station"
+location = "Field Site Alpha"
+operator = "Research Team"
+log_level = "info"
+data_dir = "/var/lib/glowbarn"
+log_dir = "/var/log/glowbarn"
+
+[security]
+# AES-256-GCM encryption for data at rest
+encryption_enabled = true
+# Argon2id for key derivation
+key_derivation = "argon2id"
+# Auto-lock after inactivity (seconds)
+auto_lock_timeout = 300
+# Require authentication for sensitive operations
+require_auth = true
+
+[network]
+# MQTT broker for real-time data streaming
+mqtt_enabled = true
+mqtt_broker = "localhost"
+mqtt_port = 1883
+mqtt_topic_prefix = "glowbarn"
+# WebSocket server for remote monitoring
+websocket_enabled = true
+websocket_port = 8080
+# BLE beacon for local discovery
+ble_enabled = true
+ble_name = "GlowBarn-Station"
+
+[storage]
+# Local database for historical data
+database = "sqlite"
+database_path = "/var/lib/glowbarn/data.db"
+# Automatic data export interval (minutes)
+auto_export_interval = 60
+# Export format
+export_format = "parquet"
+# Retention policy (days)
+retention_days = 365
+
+[display]
+# Auto-start GUI on boot
+auto_start_gui = true
+# Fullscreen mode
+fullscreen = false
+# Dark theme
+theme = "dark"
+# Refresh rate (Hz)
+refresh_rate = 30
+
+[alerts]
+# Enable anomaly alerts
+enabled = true
+# Alert thresholds
+emf_threshold = 5.0  # milliGauss
+temperature_delta = 5.0  # degrees C
+sound_threshold = -20.0  # dB relative to baseline
+# Notification methods
+notify_sound = true
+notify_visual = true
+notify_mqtt = true

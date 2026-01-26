@@ -1,0 +1,26 @@
+[Unit]
+Description=GlowBarn Hardware Abstraction Layer
+Documentation=https://github.com/bad-antics/glowbarn-os
+Before=glowbarn.service
+After=systemd-modules-load.service
+
+[Service]
+Type=notify
+ExecStart=/opt/glowbarn/bin/glowbarn-hal
+Restart=always
+RestartSec=3
+Environment=GLOWBARN_HAL_CONFIG=/etc/glowbarn/hal.toml
+
+# HAL needs hardware access
+CapabilityBoundingSet=CAP_SYS_RAWIO CAP_NET_ADMIN CAP_NET_RAW
+AmbientCapabilities=CAP_SYS_RAWIO CAP_NET_ADMIN CAP_NET_RAW
+DeviceAllow=/dev/i2c-* rw
+DeviceAllow=/dev/spidev* rw
+DeviceAllow=/dev/gpiochip* rw
+DeviceAllow=/dev/ttyUSB* rw
+DeviceAllow=/dev/ttyACM* rw
+DeviceAllow=/dev/video* rw
+DeviceAllow=/dev/snd/* rw
+
+[Install]
+WantedBy=multi-user.target

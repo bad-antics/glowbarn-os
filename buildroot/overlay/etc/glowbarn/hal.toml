@@ -1,0 +1,92 @@
+# GlowBarn Hardware Abstraction Layer Configuration
+
+[hal]
+# Scan interval for hardware changes (seconds)
+scan_interval = 10
+# Enable hot-plug support
+hotplug_enabled = true
+# Hardware watchdog timeout (seconds)
+watchdog_timeout = 30
+
+[i2c]
+# I2C bus configurations
+enabled = true
+buses = ["/dev/i2c-1", "/dev/i2c-2"]
+# Bus speed (Hz)
+speed = 400000
+# Retry count for failed operations
+retry_count = 3
+
+[spi]
+enabled = true
+devices = ["/dev/spidev0.0", "/dev/spidev0.1"]
+# SPI mode (0-3)
+mode = 0
+# Max speed (Hz)
+max_speed = 1000000
+# Bits per word
+bits_per_word = 8
+
+[gpio]
+enabled = true
+chip = "/dev/gpiochip0"
+# Reserved pins (not available for sensors)
+reserved_pins = [0, 1, 14, 15]
+
+[usb]
+enabled = true
+# Vendor IDs to auto-detect
+auto_detect_vendors = [
+    "0x0403",  # FTDI
+    "0x10c4",  # Silicon Labs
+    "0x067b",  # Prolific
+    "0x1a86",  # CH340
+    "0x0bda",  # RTL-SDR
+]
+# Baud rate for serial devices
+default_baud = 115200
+
+[audio]
+enabled = true
+# ALSA device for input
+input_device = "hw:0,0"
+# Sample rate
+sample_rate = 48000
+# Channels
+channels = 2
+# Buffer size (frames)
+buffer_size = 1024
+
+[camera]
+enabled = true
+# Video4Linux device
+device = "/dev/video0"
+# Resolution
+width = 1280
+height = 720
+# Frame rate
+fps = 30
+# Pixel format
+format = "MJPG"
+
+[thermal]
+enabled = true
+# Thermal camera device
+device = "/dev/video1"
+# Resolution (typically lower for thermal)
+width = 160
+height = 120
+# Frame rate
+fps = 9
+
+[sdr]
+# Software-defined radio
+enabled = true
+# RTL-SDR device index
+device_index = 0
+# Default center frequency (Hz)
+center_freq = 433920000
+# Sample rate
+sample_rate = 2400000
+# Gain (dB, auto if -1)
+gain = -1

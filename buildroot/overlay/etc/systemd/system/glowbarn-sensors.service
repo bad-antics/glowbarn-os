@@ -1,0 +1,20 @@
+[Unit]
+Description=GlowBarn Sensor Data Collection Service
+Documentation=https://github.com/bad-antics/glowbarn-os
+Before=glowbarn.service
+After=glowbarn-hal.service
+Requires=glowbarn-hal.service
+
+[Service]
+Type=simple
+ExecStart=/opt/glowbarn/bin/glowbarn-sensors
+Restart=always
+RestartSec=3
+Environment=GLOWBARN_SENSOR_CONFIG=/etc/glowbarn/sensors.toml
+Environment=RUST_LOG=info
+
+# Sensor access
+SupplementaryGroups=i2c spi gpio dialout audio video
+
+[Install]
+WantedBy=multi-user.target

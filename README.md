@@ -63,15 +63,33 @@ GlowBarn OS is a custom Linux-based operating system designed to run the GlowBar
 - [ ] GitHub release
 
 ### Phase 2: Hardware Abstraction Layer
-- [ ] I2C sensor interface
-- [ ] SPI sensor interface  
-- [ ] GPIO control
-- [ ] USB device enumeration
-- [ ] Audio capture (ALSA/PipeWire)
-- [ ] Camera/thermal imaging
-- [ ] Software-defined radio (RTL-SDR)
+- [x] I2C sensor interface (HMC5883L, BME280, MLX90614)
+- [x] SPI sensor interface (ADS1256, MCP3008)
+- [x] GPIO control (PIR, laser grid, PWM)
+- [x] USB device enumeration (serial, HID)
+- [x] Audio capture (EVP, infrasound, spirit box)
+- [x] Camera/thermal imaging (V4L2, FLIR, night vision)
+- [x] Software-defined radio (RTL-SDR, EMF analyzer)
 
-### Phase 3: Firmware Foundation
+### Phase 3: Sensor Fusion Library
+- [x] Statistical baseline tracking
+- [x] Z-score anomaly detection
+- [x] Multi-sensor event correlation
+- [x] Sliding window analysis
+- [x] EMA trend detection
+- [x] CUSUM change point detection
+- [x] Isolation Forest multivariate detection
+- [x] Pattern matching
+
+### Phase 4: Application Framework
+- [x] Main application daemon
+- [x] CLI management tool
+- [x] Event recording & playback
+- [x] Trigger system
+- [x] Configuration management
+- [x] Session export
+
+### Phase 5: Firmware Foundation
 - [ ] Custom Linux kernel config
 - [ ] PREEMPT_RT patches for real-time
 - [ ] Minimal initramfs
@@ -142,6 +160,33 @@ sudo dd if=output/glowbarn-os.img of=/dev/sdX bs=4M status=progress
 
 ```
 glowbarn-os/
+├── Cargo.toml              # Rust workspace manifest
+├── hal/                    # Hardware Abstraction Layer (Rust)
+│   ├── Cargo.toml
+│   ├── src/
+│   │   ├── lib.rs          # Core traits & HardwareManager
+│   │   ├── i2c.rs          # I2C sensors
+│   │   ├── spi.rs          # SPI devices
+│   │   ├── gpio.rs         # GPIO control
+│   │   ├── usb.rs          # USB enumeration
+│   │   ├── audio.rs        # Audio capture
+│   │   ├── camera.rs       # Camera/thermal
+│   │   └── sdr.rs          # Software-defined radio
+│   └── examples/
+├── sensors/                # Sensor Fusion Library (Rust)
+│   ├── Cargo.toml
+│   └── src/
+│       ├── lib.rs          # Event types
+│       ├── fusion.rs       # Multi-sensor fusion
+│       ├── anomaly.rs      # Anomaly detection
+│       ├── recording.rs    # Session recording
+│       └── triggers.rs     # Trigger automation
+├── app/                    # Application (Rust)
+│   ├── Cargo.toml
+│   └── src/
+│       ├── main.rs         # Daemon
+│       ├── cli.rs          # CLI tool
+│       └── config.rs       # Configuration
 ├── buildroot/              # Buildroot external tree
 │   ├── board/glowbarn/     # Board-specific files
 │   ├── configs/            # Defconfigs for targets
@@ -184,9 +229,87 @@ GNU General Public License v3.0 (GPLv3)
 
 ---
 
-**Status:** 🟡 Planning Phase - Focus on completing glowbarn-rs first
+**Status:** � Active Development - Rust HAL, Sensors, and Application crates complete
 
-**Last Updated:** 2026-01-24
+**Last Updated:** 2026-01-26
+
+---
+
+## Rust Workspace
+
+The core GlowBarn system is implemented as a Rust workspace with three crates:
+
+```
+├── hal/                    # Hardware Abstraction Layer
+│   ├── src/
+│   │   ├── lib.rs          # Core HAL traits & HardwareManager
+│   │   ├── i2c.rs          # I2C: HMC5883L, BME280, MLX90614
+│   │   ├── spi.rs          # SPI: ADS1256, MCP3008
+│   │   ├── gpio.rs         # GPIO: PIR, laser grid, PWM
+│   │   ├── usb.rs          # USB: serial, HID devices
+│   │   ├── audio.rs        # Audio: EVP, infrasound, spirit box
+│   │   ├── camera.rs       # Camera: V4L2, thermal, night vision
+│   │   └── sdr.rs          # SDR: RTL-SDR, EMF analyzer
+│   └── examples/
+│       ├── sensor_demo.rs
+│       └── emf_scanner.rs
+├── sensors/                # Sensor Fusion & Analysis
+│   └── src/
+│       ├── lib.rs          # Event types, ParanormalEvent
+│       ├── fusion.rs       # FusionEngine, multi-sensor correlation
+│       ├── anomaly.rs      # Z-score, EMA, CUSUM, IsolationForest
+│       ├── recording.rs    # EventRecorder, session management
+│       └── triggers.rs     # TriggerManager, automated responses
+└── app/                    # Main Application
+    └── src/
+        ├── main.rs         # Daemon entry point
+        ├── cli.rs          # CLI management tool
+        └── config.rs       # AppConfig
+```
+
+### Building
+
+```bash
+# Build release binaries
+cargo build --release
+
+# Binaries are in target/release/
+# - glowbarn       (daemon)
+# - glowbarn-cli   (CLI tool)
+```
+
+### CLI Usage
+
+```bash
+# Show system information
+glowbarn-cli info
+
+# List recording sessions
+glowbarn-cli sessions
+
+# Show events from a session
+glowbarn-cli events <session-id>
+
+# Export session to JSON
+glowbarn-cli export <session-id> --format json
+
+# Generate sample config
+glowbarn-cli config > /etc/glowbarn/config.toml
+```
+
+### Configuration
+
+```toml
+# /etc/glowbarn/config.toml or ~/.config/glowbarn/config.toml
+
+location = "Investigation Site Alpha"
+session_name = "session_001"
+data_directory = "/var/lib/glowbarn/data"
+poll_interval_ms = 100
+anomaly_threshold = 3.0
+min_confidence = 0.7
+auto_record = true
+```
 
 ---
 

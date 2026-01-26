@@ -1,0 +1,58 @@
+[package]
+name = "glowbarn-hal"
+version = "0.1.0"
+edition = "2021"
+authors = ["GlowBarn Team"]
+description = "Hardware Abstraction Layer for GlowBarn Paranormal Detection Suite"
+license = "GPL-3.0"
+repository = "https://github.com/bad-antics/glowbarn-os"
+keywords = ["hardware", "sensors", "embedded", "paranormal", "iot"]
+categories = ["embedded", "hardware-support", "science"]
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.0", features = ["full"] }
+
+# Error handling
+thiserror = "1.0"
+
+# Logging
+tracing = "0.1"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+# Linux-specific
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"
+nix = { version = "0.28", features = ["ioctl", "fs"] }
+
+[dev-dependencies]
+tokio-test = "0.4"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[features]
+default = ["i2c", "spi", "gpio", "usb", "audio", "camera", "sdr"]
+i2c = []
+spi = []
+gpio = []
+usb = []
+audio = []
+camera = []
+sdr = []
+
+# Enable all paranormal research sensors
+paranormal = ["default"]
+
+# Minimal build for resource-constrained devices
+minimal = ["i2c", "gpio"]
+
+[[example]]
+name = "sensor_demo"
+path = "examples/sensor_demo.rs"
+
+[[example]]
+name = "emf_scanner"
+path = "examples/emf_scanner.rs"

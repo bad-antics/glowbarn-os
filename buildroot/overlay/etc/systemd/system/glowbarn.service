@@ -1,0 +1,26 @@
+[Unit]
+Description=GlowBarn Paranormal Detection Suite
+Documentation=https://github.com/bad-antics/glowbarn-os
+After=network.target multi-user.target
+Wants=glowbarn-sensors.service glowbarn-hal.service
+
+[Service]
+Type=simple
+User=glowbarn
+Group=glowbarn
+ExecStart=/opt/glowbarn/bin/glowbarn-console
+Restart=always
+RestartSec=5
+Environment=GLOWBARN_HOME=/opt/glowbarn
+Environment=GLOWBARN_CONFIG=/etc/glowbarn/config.toml
+Environment=RUST_LOG=info
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/glowbarn /var/log/glowbarn
+
+[Install]
+WantedBy=multi-user.target

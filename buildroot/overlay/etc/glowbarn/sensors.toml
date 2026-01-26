@@ -1,0 +1,176 @@
+# GlowBarn Sensor Configuration
+
+[sensors]
+# Global sensor settings
+poll_interval_ms = 100
+buffer_size = 1000
+enable_fusion = true
+
+# EMF Sensors
+[[sensor]]
+name = "emf_primary"
+type = "emf"
+enabled = true
+interface = "i2c"
+address = 0x1E
+calibration_offset = 0.0
+unit = "mG"
+range_min = -200.0
+range_max = 200.0
+
+[[sensor]]
+name = "emf_secondary"
+type = "emf"
+enabled = true
+interface = "i2c"
+address = 0x1F
+calibration_offset = 0.0
+unit = "mG"
+
+# Temperature Sensors
+[[sensor]]
+name = "temp_ambient"
+type = "temperature"
+enabled = true
+interface = "i2c"
+address = 0x48
+calibration_offset = 0.0
+unit = "C"
+
+[[sensor]]
+name = "temp_ir"
+type = "temperature_ir"
+enabled = true
+interface = "i2c"
+address = 0x5A
+calibration_offset = 0.0
+unit = "C"
+
+# Pressure/Barometer
+[[sensor]]
+name = "pressure"
+type = "pressure"
+enabled = true
+interface = "i2c"
+address = 0x77
+unit = "hPa"
+
+# Humidity
+[[sensor]]
+name = "humidity"
+type = "humidity"
+enabled = true
+interface = "i2c"
+address = 0x40
+unit = "%"
+
+# Light Sensors
+[[sensor]]
+name = "light_visible"
+type = "light"
+enabled = true
+interface = "i2c"
+address = 0x29
+unit = "lux"
+
+[[sensor]]
+name = "light_uv"
+type = "uv"
+enabled = true
+interface = "i2c"
+address = 0x38
+unit = "index"
+
+# Motion/Vibration
+[[sensor]]
+name = "accelerometer"
+type = "accelerometer"
+enabled = true
+interface = "i2c"
+address = 0x68
+unit = "g"
+range = 4  # +/- 4g
+
+[[sensor]]
+name = "gyroscope"
+type = "gyroscope"
+enabled = true
+interface = "i2c"
+address = 0x68
+unit = "dps"
+range = 500  # +/- 500 dps
+
+# Audio
+[[sensor]]
+name = "microphone"
+type = "audio"
+enabled = true
+interface = "alsa"
+device = "hw:0,0"
+sample_rate = 48000
+channels = 1
+format = "S16_LE"
+
+# Geiger Counter (via serial)
+[[sensor]]
+name = "geiger"
+type = "radiation"
+enabled = false
+interface = "serial"
+device = "/dev/ttyUSB0"
+baud = 9600
+unit = "CPM"
+
+# Air Quality
+[[sensor]]
+name = "air_quality"
+type = "air_quality"
+enabled = true
+interface = "i2c"
+address = 0x58
+metrics = ["co2", "tvoc", "pm25"]
+
+# GPS
+[[sensor]]
+name = "gps"
+type = "gps"
+enabled = true
+interface = "serial"
+device = "/dev/ttyACM0"
+baud = 9600
+
+# RTL-SDR (RF spectrum)
+[[sensor]]
+name = "rf_spectrum"
+type = "sdr"
+enabled = true
+interface = "usb"
+device_index = 0
+center_freq = 433920000
+bandwidth = 2400000
+
+[fusion]
+# Multi-sensor fusion settings
+algorithm = "bayesian"  # Options: bayesian, dempster_shafer, kalman
+confidence_threshold = 0.7
+# Sensors to include in fusion
+include_sensors = [
+    "emf_primary",
+    "emf_secondary", 
+    "temp_ambient",
+    "temp_ir",
+    "light_visible",
+    "accelerometer",
+    "microphone",
+    "rf_spectrum"
+]
+
+[anomaly_detection]
+# Anomaly detection settings
+algorithm = "isolation_forest"
+# Window size for baseline calculation
+baseline_window_seconds = 300
+# Sensitivity (0.0-1.0, higher = more sensitive)
+sensitivity = 0.7
+# Minimum sensors required for anomaly confirmation
+min_sensors_for_confirmation = 3

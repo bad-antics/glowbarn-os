@@ -53,6 +53,26 @@ deps:
 		python3 python3-pip file \
 		qemu-system-x86 qemu-system-arm
 
+# Rust targets
+.PHONY: rust rust-build rust-test rust-clean rust-check
+
+rust:
+	@echo "Building Rust components..."
+	cargo build --release
+
+rust-build:
+	cargo build --release --all
+
+rust-test:
+	cargo test --all
+
+rust-check:
+	cargo check --all
+	cargo clippy --all -- -D warnings
+
+rust-clean:
+	cargo clean
+
 setup: $(BUILDROOT_DIR)
 	@echo "Buildroot setup complete!"
 	@echo "Run 'make menuconfig' to configure"
